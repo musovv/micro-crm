@@ -1,0 +1,4830 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0",
+    "title": "microCRM",
+    "summary": "Micro CRM based on messengers ",
+    "description": "This API is builded for website. "
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/users/{userId}": {
+      "get": {
+        "summary": "Get User Info by User ID",
+        "description": "Retrieve the information of the user with the matching user ID.",
+        "operationId": "get-users-userId",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "Id of an existing user.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "examples": {
+                  "Get User Alice Smith": {
+                    "value": {
+                      "id": 142,
+                      "firstName": "Alice",
+                      "lastName": "Smith",
+                      "email": "alice.smith@gmail.com",
+                      "dateOfBirth": "1997-10-31",
+                      "emailVerified": true,
+                      "signUpDate": "2019-08-24"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User Not Found"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Update User Information",
+        "description": "Update the information of an existing user.",
+        "operationId": "patch-users-userId",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "Id of an existing user.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Patch user properties to update.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "If a new email is given, the user's email verified property will be set to false."
+                  },
+                  "dateOfBirth": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "Update First Name": {
+                  "value": {
+                    "firstName": "Rebecca"
+                  }
+                },
+                "Update Email": {
+                  "value": {
+                    "email": "rebecca@gmail.com"
+                  }
+                },
+                "Update Last Name & Date of Birth": {
+                  "value": {
+                    "lastName": "Baker",
+                    "dateOfBirth": "1985-10-02"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "examples": {
+                  "Updated User Rebecca Baker": {
+                    "value": {
+                      "id": 13,
+                      "firstName": "Rebecca",
+                      "lastName": "Baker",
+                      "email": "rebecca@gmail.com",
+                      "dateOfBirth": "1985-10-02",
+                      "emailVerified": false,
+                      "createDate": "2019-08-24"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User Not Found"
+          },
+          "409": {
+            "description": "Email Already Taken"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/user": {
+      "post": {
+        "summary": "Create New User",
+        "description": "Create a new user.",
+        "operationId": "post-user",
+        "requestBody": {
+          "description": "Post the necessary fields for the API to create a new user.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "dateOfBirth": {
+                    "type": "string",
+                    "format": "date"
+                  }
+                },
+                "required": [
+                  "firstName",
+                  "lastName",
+                  "email",
+                  "dateOfBirth"
+                ]
+              },
+              "examples": {
+                "Create User Bob Fellow": {
+                  "value": {
+                    "firstName": "Bob",
+                    "lastName": "Fellow",
+                    "email": "bob.fellow@gmail.com",
+                    "dateOfBirth": "1996-08-24"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "examples": {
+                  "New User Bob Fellow": {
+                    "value": {
+                      "id": 12,
+                      "firstName": "Bob",
+                      "lastName": "Fellow",
+                      "email": "bob.fellow@gmail.com",
+                      "dateOfBirth": "1996-08-24",
+                      "emailVerified": false,
+                      "createDate": "2020-11-18"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing Required Information"
+          },
+          "409": {
+            "description": "Email Already Taken"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/employee/": {
+      "get": {
+        "summary": "Get list employees",
+        "description": "Return the list of the company's employees.",
+        "operationId": "get-employee",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Employee"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "post": {
+        "summary": "",
+        "description": "Only the owner can \"add an employee\" and assign an \"employee role\". \r\nThe owner is automatically established when the system is connected and the company's email \r\naddress is specified when connecting. \r\nWhen an employee is added, the owner copies the link and sends it to the email \r\nof the employee who needs to be added. \r\nAfter clicking on the link, the employee registers in the system to gain access.",
+        "operationId": "post-employee",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewEmployee"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmployeeRole"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "put": {
+        "summary": "",
+        "description": "The user can make changes to the \"Edit\" employee and change the \"Employee role\", \r\nas well as grant or restrict \"Access rights\".",
+        "operationId": "put-employee",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/EmployeeRole"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EmployeeRole"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/role/": {
+      "get": {
+        "summary": "Get list roles",
+        "operationId": "get-Role",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Role"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "post": {
+        "summary": "",
+        "operationId": "post-role",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Role"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "put": {
+        "summary": "",
+        "operationId": "put-role",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Role"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/role/{ID}/": {
+      "get": {
+        "summary": "Get a role",
+        "operationId": "get-role-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "delete": {
+        "summary": "",
+        "operationId": "delete-role-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/employee/{ID}/": {
+      "get": {
+        "summary": "Get an employee",
+        "operationId": "get-employee-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Employee"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete an Employee",
+        "operationId": "delete-employee-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {},
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/dialog/": {
+      "get": {
+        "summary": "Get list of dialogs",
+        "description": "We return a list of chats with the ability to filter \r\nby telegram/instagram/whatsapp channels. \r\nIn chats, contact numbers are not displayed, only nicknames, \r\nand you cannot write to the first client.",
+        "operationId": "get-dialog",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "search someone by word",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Dialog"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "post": {
+        "summary": "",
+        "description": "When creating a new chat, the user specifies the \r\n\"Where to write\" bot and the \"Where to write\" phone number, \r\nor selects a number from the contact list, \r\nif one has been created.",
+        "operationId": "post-dialog",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewDialog"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dialog"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/dialog/{id}/reply/": {
+      "post": {
+        "summary": "",
+        "description": "Send a message.",
+        "operationId": "post-dialog-id-reply",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "text/plain": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/dialog/{id}/no_answer/": {
+      "post": {
+        "summary": "",
+        "description": "The user can specify in a specific \r\nchat whether or not a response is required.",
+        "operationId": "post-dialog-id-no_answer",
+        "parameters": [
+          {
+            "name": "value",
+            "in": "query",
+            "description": "0,1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/dialog/{ID}/": {
+      "get": {
+        "summary": "Get the dialog",
+        "operationId": "get-dialog-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DialogMessage"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "delete": {
+        "summary": "",
+        "description": "Delete the selected chat. Only the owner of the \r\n\"company\"/admin can \"delete\" a chat.",
+        "operationId": "delete-dialog-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/connection/": {
+      "get": {
+        "summary": "Get list connections",
+        "operationId": "get-connection",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Connection"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "header-0": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "post": {
+        "summary": "",
+        "description": "When creating a new connection, \r\nthe user selects a connection channel from the existing ones, \r\nfalls into it, and selects \"Add bot\" or \"Phone number\".",
+        "operationId": "post-connection",
+        "requestBody": {
+          "description": "обьект \"Создать подключение\"",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewConnection"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewConnection"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "put": {
+        "summary": "",
+        "description": "The user can make changes to the \"Edit\" connection \r\nchannel and change the \"Connection Name\".",
+        "operationId": "put-connection",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewConnection"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewConnection"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/connection/{ID}/": {
+      "get": {
+        "summary": "Get the connection",
+        "operationId": "get-connection-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewConnection"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "delete": {
+        "summary": "",
+        "operationId": "delete-connection-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/menu/": {
+      "get": {
+        "summary": "Get a menu",
+        "description": "After the first stage of authorization on the site, \r\nwe proceed to the stage of loading the dashboard, \r\ni.e. loading the central menu. \r\nThe list of menu items is loaded through \r\nthe user's permissions by passing the ID of the authorized user.",
+        "operationId": "get-Menu",
+        "parameters": [
+          {
+            "name": "employee",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Menu"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/catalog/": {
+      "get": {
+        "summary": "Get list catalogs",
+        "description": "The user returns a list of directories.",
+        "operationId": "get-Catalog",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Catalog"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "post": {
+        "summary": "",
+        "description": "The user can create a catalog, \r\nadd a catalog name and products.",
+        "operationId": "post-Catalog",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewCatalog"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "id": "string",
+                    "name": "string",
+                    "products": [
+                      {
+                        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                        "name": "string",
+                        "description": "string",
+                        "product_type": {
+                          "name": "Other",
+                          "code": 0
+                        },
+                        "price": 0,
+                        "currency": "usd",
+                        "vat": "string",
+                        "code_product": "stringstri",
+                        "image": {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "filename": "string",
+                          "body": "string",
+                          "format": "image/vnd.microsoft.icon",
+                          "date": "2019-08-24T14:15:22Z",
+                          "main": true
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewCatalog"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "put": {
+        "summary": "",
+        "description": "The user can \"Edit\" an already created catalog, \r\nchange the \"Name\", \"Add\" or vice versa \"Remove\" the product.",
+        "operationId": "put-Catalog",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewCatalog"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "id": "string",
+                    "name": "string",
+                    "products": [
+                      {
+                        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                        "name": "string",
+                        "description": "string",
+                        "product_type": {
+                          "name": "Other",
+                          "code": 0
+                        },
+                        "price": 0,
+                        "currency": "usd",
+                        "vat": "string",
+                        "code_product": "stringstri",
+                        "image": {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "filename": "string",
+                          "body": "string",
+                          "format": "image/vnd.microsoft.icon",
+                          "date": "2019-08-24T14:15:22Z",
+                          "main": true
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewCatalog"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/catalog/{ID}/": {
+      "get": {
+        "summary": "Get a catalog",
+        "operationId": "get-catalog-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewCatalog"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "string",
+                      "name": "string",
+                      "products": [
+                        {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "name": "string",
+                          "description": "string",
+                          "product_type": {
+                            "name": "Other",
+                            "code": 0
+                          },
+                          "price": 0,
+                          "currency": "usd",
+                          "vat": "string",
+                          "code_product": "stringstri",
+                          "image": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "filename": "string",
+                            "body": "string",
+                            "format": "image/vnd.microsoft.icon",
+                            "date": "2019-08-24T14:15:22Z",
+                            "main": true
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "delete": {
+        "summary": "",
+        "operationId": "delete-catalog-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/order/": {
+      "get": {
+        "summary": "Get list of orders",
+        "operationId": "get-order",
+        "parameters": [
+          {
+            "name": "client_id",
+            "in": "query",
+            "description": "filter by client",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "post": {
+        "summary": "",
+        "operationId": "post-order",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewOrder"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/order/{ID}/": {
+      "get": {
+        "summary": "Get Order",
+        "operationId": "get-order-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/client/": {
+      "get": {
+        "summary": "Get list clients",
+        "description": "Return the contact list.",
+        "operationId": "get-customer",
+        "parameters": [
+          {
+            "name": "serch",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "owner_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Customer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "post": {
+        "summary": "",
+        "description": "A customer can \"Create\" a new contact. \r\nAdd First Name/Last Name, phone number \r\n(you can choose a country code), e-mail, tags. \r\nYou can add multiple phone numbers or e-mails\r\n to each contact. ! The employee's photo is set\r\n  during the first correspondence with the client. \r\nWhen you create a photo, it is not transferred.",
+        "operationId": "post-customer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Customer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "put": {
+        "summary": "",
+        "description": "The user can make changes to an already created\r\n contact: change the first and last name,\r\nadd a tag, add a note, add a phone number, add an e-mail.",
+        "operationId": "put-client",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Customer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/client/{ID}/": {
+      "get": {
+        "summary": "Get a client",
+        "operationId": "get-client-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/client/findByTags/": {
+      "get": {
+        "summary": "",
+        "operationId": "get-client-findByTags",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "owner_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Customer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/template/": {
+      "get": {
+        "summary": "Get list templates",
+        "description": "Return a list of templates.",
+        "operationId": "get-template",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Template"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "post": {
+        "summary": "",
+        "description": "A user can \"Create\" a template by adding a template title and its text. There is also \r\nan option to insert an image/video/emoticon.",
+        "operationId": "post-template",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Template"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                    "title": "string",
+                    "text": "string",
+                    "owner_id": "8826ee2e-7933-4665-aef2-2393f84a0d05"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Template"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "delete": {
+        "summary": "",
+        "description": "The user can \"delete\" the template.",
+        "operationId": "delete-template",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "put": {
+        "summary": "",
+        "description": "The user can \"Edit\" the template by changing the title and text\r\n (along with the content of the text).",
+        "operationId": "put-template",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Template"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Template"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/template/{ID}/": {
+      "get": {
+        "summary": "Get a template",
+        "operationId": "get-template-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Template"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/interactive_msg/": {
+      "get": {
+        "summary": "Get list interactive msgs",
+        "description": "Return a list of interactive messages with the ability to\r\n filter by text/image/video/document channels.",
+        "operationId": "get-interactive_msg",
+        "parameters": [
+          {
+            "name": "type_msg",
+            "in": "query",
+            "description": "text, document, photo, video",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InteractiveMsg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "put": {
+        "summary": "",
+        "description": "The user can \"edit\" an interactive message \r\nby making changes to the text, image,\r\n video, document, header, footer, button.",
+        "operationId": "put-interactive_msg",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InteractiveMsg"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InteractiveMsg"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "post": {
+        "summary": "",
+        "description": "The user can \"create\" an actionable message, \r\nenter the name of the template, select the type\r\n of template title, fill in the text, and optionally the footer.",
+        "operationId": "post-interactive_msg",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InteractiveMsg"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InteractiveMsg"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/interactive_msg/{ID}/": {
+      "get": {
+        "summary": "Get a interactive msg",
+        "operationId": "get-interactive_msg-ID",
+        "parameters": [
+          {
+            "name": "type_msg",
+            "in": "query",
+            "description": "text, document, photo, video",
+            "schema": {
+              "type": "array"
+            }
+          },
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InteractiveMsg"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {},
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/employee/CreateNewEmployee": {
+      "post": {
+        "summary": "",
+        "operationId": "post-employee-CreateNewEmployee",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "An email for registration",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/shop": {
+      "get": {
+        "summary": "Get list shops",
+        "operationId": "get-shop",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Shop"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "post": {
+        "summary": "",
+        "operationId": "post-shop",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Shop"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Shop"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "put": {
+        "summary": "",
+        "operationId": "put-shop",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Shop"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Shop"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/shop/{ID}": {
+      "get": {
+        "summary": "Get a shop",
+        "operationId": "get-shop-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Shop"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "delete": {
+        "summary": "",
+        "operationId": "delete-shop-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/product": {
+      "get": {
+        "summary": "Get list products",
+        "operationId": "get-product",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "post": {
+        "summary": "",
+        "operationId": "post-product",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewProduct"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewProduct"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "put": {
+        "summary": "",
+        "operationId": "put-product",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewProduct"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewProduct"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/product/{ID}": {
+      "get": {
+        "summary": "Get a product",
+        "operationId": "get-product-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewProduct"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "delete": {
+        "summary": "",
+        "operationId": "delete-product-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/newsletter/": {
+      "get": {
+        "summary": "Get list newsletter",
+        "operationId": "get-newsletter",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Newsletter"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "post": {
+        "summary": "",
+        "description": "The user can send messages via WABA, WhatsApp (Unofficial integration),\r\nTelegram, Telegram Bot. Access to the \"Campaigns\" section is available\r\n only to users with \"administrator\", \"owner\" rights and those employees \r\n who have these access rights in the \"Settings\" - \"Employees\" section Important:\r\n  When sending messages through the unofficial integration of WhatsApp and Telegram,\r\n be careful, as the number may be blocked. Refunds for the subscription, in case of \r\nblocking (banning) of the number, are not carried out. We recommend that you familiarize\r\n yourself with the recommendations for mailings so as not to get banned: \r\nRecommendation for WhatsApp Recommendation for Telegram.",
+        "operationId": "post-newsletter",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewNewsletter"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Newsletter"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "put": {
+        "summary": "",
+        "description": "In case the mailing has not yet been sent and \r\nhas the status \"scheduled\", then we can update the\r\n text and the list of clients and change the time of sending.",
+        "operationId": "put-newsletter",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewNewsletter"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Newsletter"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/Newsletter/{ID}.": {
+      "get": {
+        "summary": "Get a newsletter",
+        "operationId": "get-Newsletter-ID-.",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Newsletter"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/Newsletter/{ID}/cancel/": {
+      "post": {
+        "summary": "",
+        "description": "Unsubscribe.",
+        "operationId": "post-Newsletter-ID-cancel",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Newsletter"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/notification": {
+      "get": {
+        "summary": "Get list notifications",
+        "operationId": "get-notification",
+        "parameters": [
+          {
+            "name": "SETTING_ID",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Notification"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "post": {
+        "summary": "",
+        "operationId": "post-notification",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Notification"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "put": {
+        "summary": "",
+        "operationId": "put-notification",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Notification"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/notification/{ID}": {
+      "delete": {
+        "summary": "Delete a notification",
+        "operationId": "delete-notification-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/tag": {
+      "get": {
+        "summary": "Get list tags",
+        "operationId": "get-tag",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Tag"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "post": {
+        "summary": "",
+        "operationId": "post-tag",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Tag"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tag"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "put": {
+        "summary": "",
+        "operationId": "put-tag",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Tag"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tag"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "delete": {
+        "summary": "",
+        "operationId": "delete-tag",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/tag/{ID}": {
+      "get": {
+        "summary": "Get a tag",
+        "operationId": "get-tag-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tag"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/subscription": {
+      "get": {
+        "summary": "Get list subscription",
+        "operationId": "get-subscription",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Subscription"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "put": {
+        "summary": "",
+        "description": "Update only \"included_subscribe\"",
+        "operationId": "put-subscription",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Subscription"
+                  }
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": [
+                      {
+                        "id": "string",
+                        "status": "expired",
+                        "connection": {
+                          "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                          "name": "string",
+                          "connection_type": {
+                            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                            "name": "Telegram Personal",
+                            "code": "telegramPersonal"
+                          },
+                          "is_bot": 0,
+                          "phone_number": "stringstringstri"
+                        },
+                        "until_valid": "2019-08-24T14:15:22Z",
+                        "included_subscribe": true
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/subscription/{ID}": {
+      "get": {
+        "summary": "Get a subscription",
+        "operationId": "get-subscription-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/subscription/pay": {
+      "post": {
+        "summary": "",
+        "description": "Cancel of subscription",
+        "operationId": "post-subscription-pay",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/setting": {
+      "put": {
+        "summary": "",
+        "operationId": "put-setting",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Setting"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Setting"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/setting/{ID}": {
+      "get": {
+        "summary": "Get a setting",
+        "operationId": "get-setting-ID",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Setting"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/permission": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "operationId": "get-permission",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Permission"
+                  }
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": [
+                      {
+                        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                        "name": "string",
+                        "description": "string",
+                        "type_resource": {
+                          "name": "string",
+                          "code": "store"
+                        },
+                        "access": 0,
+                        "access_level": "string",
+                        "privilege": "string"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/organization": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "operationId": "get-organization",
+        "requestBody": {
+          "content": {}
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Setting"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "post": {
+        "summary": "Your POST endpoint",
+        "operationId": "post-organization",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Setting"
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "id": "string",
+                    "company_name": "string",
+                    "currency": "uzs",
+                    "timezone": "c97f65ed-34d5-400b-84eb-3bb27ce5abec",
+                    "language": "ru",
+                    "notification": {
+                      "id": "string",
+                      "setting_id": "a85785e9-b0c4-4f26-bdb1-2832c57d90d8",
+                      "phone_number": 10000,
+                      "notify_trouble_integrations": true,
+                      "notify_payments": true,
+                      "notify_newsletters": true
+                    },
+                    "organization_id": "7c60d51f-b44e-4682-87d6-449835ea4de6"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Setting"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/terminal/": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "operationId": "get-terminal",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Terminal"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "post": {
+        "summary": "Your POST endpoint",
+        "operationId": "post-terminal",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Terminal"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Terminal"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Your DELETE endpoint",
+        "operationId": "delete-terminal",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "put": {
+        "summary": "Your PUT endpoint",
+        "operationId": "put-terminal",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Terminal"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Terminal"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/order/{ID}/payment": {
+      "post": {
+        "summary": "Your POST endpoint",
+        "operationId": "post-order-ID-payment",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Order"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    },
+    "/charge/": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "operationId": "get-charge",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Pricing"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "title": "User",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the given user."
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date",
+            "examples": [
+              "1997-10-31"
+            ]
+          },
+          "emailVerified": {
+            "type": "boolean",
+            "description": "Set to true if the user's email has been verified."
+          },
+          "createDate": {
+            "type": "string",
+            "description": "The date that the user was created.",
+            "format": "date"
+          }
+        },
+        "required": [
+          "id",
+          "firstName",
+          "lastName",
+          "email",
+          "emailVerified"
+        ],
+        "examples": [
+          {
+            "id": 142,
+            "firstName": "Alice",
+            "lastName": "Smith",
+            "email": "alice.smith@gmail.com",
+            "dateOfBirth": "1997-10-31",
+            "emailVerified": true,
+            "signUpDate": "2019-08-24"
+          }
+        ]
+      },
+      "Employee": {
+        "type": "object",
+        "title": "Employee",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "login": {
+            "type": "string",
+            "format": "idn-email",
+            "minLength": 5,
+            "maxLength": 64
+          },
+          "first_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "last_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "inactive"
+            ]
+          },
+          "type_employee": {
+            "type": "string",
+            "enum": [
+              "owner",
+              "manager"
+            ]
+          }
+        }
+      },
+      "NewEmployee": {
+        "type": "object",
+        "title": "NewEmployee",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "login": {
+            "type": "string",
+            "format": "idn-email",
+            "minLength": 5,
+            "maxLength": 64
+          },
+          "first_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "last_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "minLength": 12,
+            "maxLength": 64
+          }
+        },
+        "examples": [
+          {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "login": "пользователь@пример.ру",
+            "first_name": "string",
+            "last_name": "string",
+            "password": "pa$$word_qwe"
+          }
+        ]
+      },
+      "EmployeeRole": {
+        "type": "object",
+        "title": "EmployeeRole",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "login": {
+            "type": "string",
+            "format": "idn-email",
+            "minLength": 64,
+            "maxLength": 64
+          },
+          "first_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "last_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Role"
+            }
+          }
+        },
+        "examples": [
+          {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "login": "пользователь@пример.ру",
+            "first_name": "string",
+            "last_name": "string",
+            "roles": [
+              {
+                "id": "string",
+                "name": "string",
+                "permissions": [
+                  {
+                    "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                    "name": "string",
+                    "resource_type": {
+                      "name": "string",
+                      "code": "store"
+                    },
+                    "value": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "Role": {
+        "type": "object",
+        "title": "Role",
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Permission"
+            }
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "examples": [
+          {
+            "id": "string",
+            "name": "string",
+            "permissions": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "name": "string",
+                "resource_type": {
+                  "name": "string",
+                  "code": "store"
+                },
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "Permission": {
+        "type": "object",
+        "title": "Permission",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "type_resource": {
+            "$ref": "#/components/schemas/TypeResource"
+          },
+          "access_level": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16
+          },
+          "privilege": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16
+          },
+          "access": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type_resource",
+          "access_level",
+          "privilege"
+        ],
+        "examples": [
+          {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "name": "string",
+            "description": "string",
+            "type_resource": {
+              "name": "string",
+              "code": "store"
+            },
+            "access": 0,
+            "access_level": "string",
+            "privilege": "string"
+          }
+        ]
+      },
+      "TypeResource": {
+        "type": "object",
+        "title": "TypeResource",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "enum": [
+              "store",
+              "catalog",
+              "product",
+              "dialog",
+              "client",
+              "template",
+              "connection",
+              "employee",
+              "tag",
+              "notification",
+              "order",
+              "setting",
+              "newsletter"
+            ]
+          }
+        },
+        "required": [
+          "code"
+        ]
+      },
+      "Dialog": {
+        "type": "object",
+        "title": "Dialog",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "examples": [
+              "7f009f3f-96e1-43be-a971-1317b88289e1"
+            ]
+          },
+          "client": {
+            "$ref": "#/components/schemas/Customer"
+          },
+          "connection_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "last_activity": {
+            "type": "string",
+            "format": "date-time",
+            "examples": [
+              "2019-08-24T14:15:22Z"
+            ]
+          },
+          "amount_unread_msgs": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "default": 0
+          }
+        },
+        "required": [
+          "connection_id"
+        ]
+      },
+      "Customer": {
+        "type": "object",
+        "title": "Customer",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fullname": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 510
+          },
+          "mobile_number1": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 10000,
+            "maximum": 999999999999999,
+            "examples": [
+              9989037280273
+            ]
+          },
+          "mobile_number2": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "minimum": 10000,
+            "maximum": 999999999999999,
+            "examples": [
+              998941230551
+            ]
+          },
+          "phone_number": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "minimum": 10000,
+            "maximum": 999999999999999,
+            "examples": [
+              88003455555
+            ]
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 255
+          },
+          "photo": {
+            "$ref": "#/components/schemas/Image"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "inactive"
+            ]
+          },
+          "owner_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            }
+          },
+          "notes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Note"
+            }
+          },
+          "tg_login": {
+            "type": "string"
+          },
+          "tg_user_id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "fullname",
+          "mobile_number1"
+        ],
+        "examples": [
+          {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "fullname": "string",
+            "mobile_number1": 9989037280273,
+            "mobile_number2": 998941230551,
+            "phone_number": 88003455555,
+            "email": "string",
+            "photo": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "filename": "string",
+              "body": "string",
+              "format": "image/vnd.microsoft.icon",
+              "date": "2019-08-24T14:15:22Z",
+              "main": true
+            },
+            "status": "active",
+            "owner_id": "8826ee2e-7933-4665-aef2-2393f84a0d05",
+            "tags": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "name": "string",
+                "color": "#F6F6F6",
+                "description": "string"
+              }
+            ],
+            "notes": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "customer_id": "string",
+                "note": "string",
+                "date": "2019-08-24T14:15:22Z"
+              }
+            ],
+            "tg_login": "string",
+            "tg_user_id": 0
+          }
+        ]
+      },
+      "Image": {
+        "type": "object",
+        "title": "Image",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "filename": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 4000000
+          },
+          "format": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 24,
+            "examples": [
+              "image/vnd.microsoft.icon"
+            ]
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "main": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "filename",
+          "body",
+          "format",
+          "date",
+          "main"
+        ]
+      },
+      "Tag": {
+        "type": "object",
+        "title": "Tag",
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "color": {
+            "type": "string",
+            "minLength": 7,
+            "maxLength": 7,
+            "examples": [
+              "#F6F6F6"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "color"
+        ]
+      },
+      "Note": {
+        "type": "object",
+        "title": "Note",
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "customer_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "note": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "note",
+          "date"
+        ]
+      },
+      "NewDialog": {
+        "type": "object",
+        "title": "NewDialog",
+        "properties": {
+          "phone_number": {
+            "type": "string",
+            "format": "regex",
+            "pattern": "^\\d{7,12}$",
+            "minLength": 7,
+            "maxLength": 12
+          },
+          "country_code": {
+            "type": "string",
+            "format": "regex",
+            "pattern": "^\\+[1-9]\\d{0,3}$"
+          },
+          "connection_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "phone_number",
+          "country_code"
+        ],
+        "examples": [
+          {
+            "phone_number": "/regex/",
+            "country_code": "/regex/",
+            "connection_id": "d3547de1-d1f2-4344-b4c2-17169b7526f9"
+          }
+        ]
+      },
+      "DialogMessage": {
+        "type": "object",
+        "title": "DialogMessage",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "connection_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "no_reply": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "title": "Message",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "dialog_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "text": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "dialog_id",
+          "text",
+          "date"
+        ]
+      },
+      "Connection": {
+        "type": "object",
+        "title": "Connection",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32
+          },
+          "connection_type": {
+            "$ref": "#/components/schemas/ConnectionType"
+          },
+          "is_bot": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "phone_number": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16
+          }
+        },
+        "required": [
+          "id",
+          "connection_type",
+          "is_bot",
+          "phone_number"
+        ],
+        "examples": [
+          {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "name": "string",
+            "connection_type": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "name": "",
+              "code": "string"
+            },
+            "is_bot": 0,
+            "phone_number": "stringstringstri"
+          }
+        ]
+      },
+      "ConnectionType": {
+        "type": "object",
+        "title": "ConnectionType",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32
+          },
+          "code": {
+            "type": "string",
+            "enum": [
+              "telegramBot",
+              "telegramPersonal",
+              "instagram",
+              "whatsapp"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "code"
+        ],
+        "examples": [
+          {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "name": "",
+            "code": "string"
+          }
+        ]
+      },
+      "NewConnection": {
+        "type": "object",
+        "title": "NewConnection",
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32
+          },
+          "connection_type": {
+            "$ref": "#/components/schemas/ConnectionType"
+          },
+          "phone_number": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16
+          },
+          "token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "connection_type",
+          "phone_number",
+          "token"
+        ],
+        "examples": [
+          {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "name": "string",
+            "connection_type": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "name": "",
+              "code": "string"
+            },
+            "phone_number": "string",
+            "token": "string"
+          }
+        ]
+      },
+      "Menu": {
+        "type": "object",
+        "title": "Menu",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "resource": {
+            "$ref": "#/components/schemas/TypeResource"
+          }
+        },
+        "required": [
+          "resource"
+        ]
+      },
+      "Catalog": {
+        "type": "object",
+        "title": "Catalog",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32
+          },
+          "product_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "product_ids"
+        ]
+      },
+      "NewCatalog": {
+        "type": "object",
+        "title": "NewCatalog",
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Product"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "products"
+        ],
+        "examples": [
+          {
+            "id": "string",
+            "name": "string",
+            "products": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "name": "string",
+                "description": "string",
+                "product_type": {
+                  "name": "Other",
+                  "code": 0
+                },
+                "price": 0,
+                "currency": "str",
+                "vat": "string",
+                "code_product": "stringstri",
+                "image": {
+                  "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                  "filename": "string",
+                  "body": "string",
+                  "format": "image/vnd.microsoft.icon",
+                  "date": "2019-08-24T14:15:22Z",
+                  "main": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "Product": {
+        "type": "object",
+        "title": "Product",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "product_type": {
+            "$ref": "#/components/schemas/TypeProduct"
+          },
+          "price": {
+            "type": "number",
+            "format": "float"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/CurrencyEnum"
+          },
+          "vat": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 8
+          },
+          "code_product": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 10,
+            "maxLength": 16
+          },
+          "image": {
+            "$ref": "#/components/schemas/Image"
+          }
+        },
+        "required": [
+          "name",
+          "product_type",
+          "price",
+          "currency"
+        ]
+      },
+      "TypeProduct": {
+        "type": "object",
+        "title": "TypeProduct",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "Other",
+              "FoodCommodities",
+              "NonFoodProducts",
+              "Service",
+              "Product"
+            ]
+          },
+          "code": {
+            "type": "integer",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          }
+        }
+      },
+      "CurrencyEnum": {
+        "type": "string",
+        "enum": [
+          "usd",
+          "uzs",
+          "eur",
+          "kzt",
+          "rub",
+          "ils"
+        ],
+        "title": "CurrencyEnum",
+        "examples": [
+          "usd"
+        ]
+      },
+      "Order": {
+        "type": "object",
+        "title": "Order",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "number": {
+            "type": "string",
+            "maxLength": 16
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "created",
+              "error",
+              "paid ",
+              "expired",
+              "partial return ",
+              "full return"
+            ]
+          },
+          "amount": {
+            "type": "number"
+          },
+          "link_pay": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "terminal": {
+            "$ref": "#/components/schemas/Terminal"
+          },
+          "client_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/OrderItem"
+            }
+          },
+          "notes": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/Note"
+            }
+          },
+          "comment": {
+            "type": "string",
+            "maxLength": 1024
+          }
+        },
+        "required": [
+          "client_id",
+          "items"
+        ],
+        "examples": [
+          {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "number": "string",
+            "date": "2019-08-24T14:15:22Z",
+            "status": "created",
+            "amount": 0,
+            "link_pay": "string",
+            "terminal": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "type_terminal": [
+                {
+                  "name": "SberBank",
+                  "code": "sberbank_ru"
+                }
+              ],
+              "name": "string",
+              "terminal_key": "string",
+              "terminal_secret": "string",
+              "callback_success": "string",
+              "lifetime_payment": "2019-08-24T14:15:22Z"
+            },
+            "client_id": "5b3fa7ba-57d3-4017-a65b-d57dcd2db643",
+            "items": [
+              {
+                "product_id": "0d012afa-f885-4e65-aeca-37e27701e2d1",
+                "quantity": 1
+              }
+            ],
+            "notes": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "customer_id": "string",
+                "note": "string",
+                "date": "2019-08-24T14:15:22Z"
+              }
+            ],
+            "comment": "string"
+          }
+        ]
+      },
+      "Terminal": {
+        "type": "object",
+        "title": "Terminal",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type_terminal": {
+            "$ref": "#/components/schemas/TypeTerminal"
+          },
+          "name": {
+            "type": "string"
+          },
+          "connection_json": {
+            "type": "string"
+          },
+          "connection_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type_terminal",
+          "name",
+          "connection_json",
+          "connection_url"
+        ],
+        "examples": [
+          {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "type_terminal": [
+              {
+                "name": "SberBank",
+                "code": "sberbank_ru",
+                "configuration_json": "/json/pointer"
+              }
+            ],
+            "name": "string",
+            "connection_json": "string"
+          }
+        ]
+      },
+      "TypeTerminal": {
+        "type": "object",
+        "title": "TypeTerminal",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "SberBank",
+              "PayMe",
+              "Click"
+            ]
+          },
+          "code": {
+            "type": "string",
+            "enum": [
+              "sberbank_ru",
+              "payme_uz",
+              "click_uz"
+            ]
+          },
+          "configuration_json": {
+            "type": "string",
+            "format": "json-pointer"
+          }
+        },
+        "required": [
+          "name",
+          "code"
+        ],
+        "examples": [
+          {
+            "name": "SberBank",
+            "code": "sberbank_ru",
+            "configuration_json": "/json/pointer"
+          }
+        ]
+      },
+      "OrderItem": {
+        "type": "object",
+        "title": "OrderItem",
+        "properties": {
+          "product_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000
+          }
+        },
+        "required": [
+          "product_id",
+          "quantity"
+        ]
+      },
+      "NewOrder": {
+        "type": "object",
+        "title": "NewOrder",
+        "properties": {
+          "client_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/OrderItem"
+            }
+          },
+          "comment": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "client_id",
+          "items"
+        ],
+        "examples": [
+          {
+            "client_id": "5b3fa7ba-57d3-4017-a65b-d57dcd2db643",
+            "items": [
+              {
+                "product_id": "0d012afa-f885-4e65-aeca-37e27701e2d1",
+                "quantity": 1
+              }
+            ],
+            "comment": "string"
+          }
+        ]
+      },
+      "Template": {
+        "type": "object",
+        "title": "Template",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "owner_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "InteractiveMsg": {
+        "type": "object",
+        "title": "InteractiveMsg",
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "footer": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "type_msg": {
+            "$ref": "#/components/schemas/TypeInteractiveMsg"
+          },
+          "document": {
+            "$ref": "#/components/schemas/Document"
+          },
+          "photo": {
+            "$ref": "#/components/schemas/Image"
+          },
+          "video": {
+            "$ref": "#/components/schemas/Video"
+          }
+        },
+        "required": [
+          "type_msg"
+        ]
+      },
+      "TypeInteractiveMsg": {
+        "type": "string",
+        "enum": [
+          "text",
+          "document",
+          "photo",
+          "video"
+        ],
+        "title": "TypeInteractiveMsg"
+      },
+      "Document": {
+        "type": "object",
+        "title": "Document",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "filename": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "storage_reference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Video": {
+        "type": "object",
+        "title": "Video",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "storage_reference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "title",
+          "storage_reference"
+        ]
+      },
+      "Shop": {
+        "type": "object",
+        "title": "Shops",
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 32,
+            "examples": [
+              "Premium food"
+            ]
+          },
+          "connection_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "catalog_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "name",
+          "connection_id",
+          "catalog_id"
+        ]
+      },
+      "NewProduct": {
+        "type": "object",
+        "title": "NewProduct",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "product_type": {
+            "$ref": "#/components/schemas/TypeProduct"
+          },
+          "price": {
+            "type": "number",
+            "format": "float"
+          },
+          "currency": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 3
+          },
+          "vat": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 8
+          },
+          "code_product": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 10,
+            "maxLength": 16
+          },
+          "catalogs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Catalog"
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Image"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "product_type",
+          "price",
+          "currency"
+        ],
+        "examples": [
+          {
+            "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+            "name": "string",
+            "description": "string",
+            "product_type": {
+              "name": "Other",
+              "code": 0
+            },
+            "price": 0,
+            "currency": "str",
+            "vat": "string",
+            "code_product": "stringstri",
+            "catalogs": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "name": "string",
+                "product_Ids": [
+                  "string"
+                ]
+              }
+            ],
+            "images": [
+              {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "filename": "string",
+                "body": "string",
+                "format": "image/vnd.microsoft.icon",
+                "date": "2019-08-24T14:15:22Z",
+                "main": true
+              }
+            ]
+          }
+        ]
+      },
+      "Newsletter": {
+        "type": "object",
+        "title": "Newsletter",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "connection": {
+            "$ref": "#/components/schemas/Connection"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 4096
+          },
+          "date_run": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "clientIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "tagIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "$ref": "#/components/schemas/StatusNewsletter"
+          },
+          "received": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "readed": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "connection",
+          "text",
+          "date_run",
+          "status",
+          "received",
+          "readed"
+        ]
+      },
+      "StatusNewsletter": {
+        "type": "string",
+        "enum": [
+          "scheduled",
+          "sending",
+          "cancelled",
+          "completed"
+        ],
+        "title": "StatusNewsletter"
+      },
+      "NewNewsletter": {
+        "type": "object",
+        "title": "NewNewsletter",
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "connection": {
+            "$ref": "#/components/schemas/Connection"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 4096
+          },
+          "date_run": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "clientIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "tagIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "connection",
+          "text",
+          "date_run"
+        ]
+      },
+      "Notification": {
+        "type": "object",
+        "title": "Notification",
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "setting_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "phone_number": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 10000,
+            "maximum": 999999999999999
+          },
+          "notify_trouble_integrations": {
+            "type": "boolean"
+          },
+          "notify_payments": {
+            "type": "boolean"
+          },
+          "notify_newsletters": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "setting_id",
+          "phone_number",
+          "notify_trouble_integrations",
+          "notify_payments",
+          "notify_newsletters"
+        ]
+      },
+      "Subscription": {
+        "type": "object",
+        "title": "Subscription",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StatusSubscription"
+          },
+          "connection": {
+            "$ref": "#/components/schemas/Connection"
+          },
+          "until_valid": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "included_subscribe": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "connection",
+          "until_valid",
+          "included_subscribe"
+        ],
+        "examples": [
+          {
+            "id": "string",
+            "status": "expired",
+            "connection": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "name": "string",
+              "connection_type": {
+                "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+                "name": "",
+                "code": "string"
+              },
+              "is_bot": 0,
+              "phone_number": "stringstringstri"
+            },
+            "until_valid": "2019-08-24T14:15:22Z",
+            "included_subscribe": true
+          }
+        ]
+      },
+      "StatusSubscription": {
+        "type": "string",
+        "enum": [
+          "expired",
+          "active",
+          "trial"
+        ],
+        "title": "StatusSubscription"
+      },
+      "Setting": {
+        "type": "object",
+        "title": "Setting",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "company_name": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "currency": {
+            "$ref": "#/components/schemas/CurrencyEnum"
+          },
+          "timezone": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "language": {
+            "type": "string",
+            "enum": [
+              "ru",
+              "uz",
+              "kz",
+              "en"
+            ]
+          },
+          "notification": {
+            "$ref": "#/components/schemas/Notification"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "examples": [
+          {
+            "id": "string",
+            "company_name": "string",
+            "currency": "usd",
+            "timezone": "c97f65ed-34d5-400b-84eb-3bb27ce5abec",
+            "language": "ru",
+            "notification": {
+              "id": "string",
+              "setting_id": "a85785e9-b0c4-4f26-bdb1-2832c57d90d8",
+              "phone_number": 10000,
+              "notify_trouble_integrations": true,
+              "notify_payments": true,
+              "notify_newsletters": true
+            },
+            "organization_id": "7c60d51f-b44e-4682-87d6-449835ea4de6"
+          }
+        ]
+      },
+      "Pricing": {
+        "type": "object",
+        "title": "Pricing",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "connection_type": {
+            "$ref": "#/components/schemas/ConnectionType"
+          },
+          "discount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 80
+          },
+          "discount_type": {
+            "$ref": "#/components/schemas/DiscountType"
+          },
+          "price": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "default": 0
+          },
+          "currency": {
+            "$ref": "#/components/schemas/CurrencyEnum"
+          }
+        },
+        "examples": [
+          {
+            "id": "string",
+            "connection_type": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "name": "",
+              "code": "string"
+            },
+            "discount": 0,
+            "discount_type": "yearly",
+            "price": 0,
+            "currency": "usd"
+          }
+        ]
+      },
+      "DiscountType": {
+        "type": "string",
+        "enum": [
+          "half-yearly",
+          "yearly",
+          "monthly"
+        ],
+        "title": "DiscountType"
+      }
+    }
+  }
+}
